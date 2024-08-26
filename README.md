@@ -32,5 +32,11 @@ or add it to a keymap
 vim.api.nvim_set_keymap('n', '<leader>jc', '<cmd>Jq "xclip -o"<cr>', { noremap = true })
 ```
 
+Go to a line or visual select some text and press:
+
+    <leader>jf
+
+to search your original json (files only) for that text.
+
 Close the window by running the command `:Jq` again or simply exit the window.
 

@@ -1,3 +1,5 @@
+local helpers = require("jq.helpers")
+
 local api = vim.api
 local buf, win, previous_bufnr, json_input
 local defaults = {
@@ -138,6 +140,22 @@ local function on_buf_leave()
 	previous_bufnr = vim.fn.bufnr()
 end
 
+local function search_previous_window(text)
+	local win = vim.api.nvim_get_current_win()
+	vim.api.nvim_win_close(win, true)
+	vim.cmd("/" .. text)
+end
+
+local function search_line()
+	local text = vim.api.nvim_get_current_line()
+	search_previous_window(text)
+end
+
+local function search_selection()
+	local text = helpers.get_visual_selection()
+	search_previous_window(text)
+end
+
 function M.setup(opts)
 	opts = opts or {}
 
@@ -150,6 +168,8 @@ function M.setup(opts)
 	api.nvim_create_user_command("Jq", toggle_window, {})
 
 	api.nvim_set_keymap("n", "<leader>jq", "<cmd>Jq<cr>", { noremap = true })
+	vim.keymap.set("n", "<leader>jf", search_line, { noremap = true })
+	vim.keymap.set("v", "<leader>jf", search_selection, { noremap = true })
 
 	vim.api.nvim_create_autocmd("BufLeave", {
 		desc = "Set previous bufnr",
